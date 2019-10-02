@@ -80,14 +80,16 @@ def _simplify_tf_tensorshape(tensorshape: tf.TensorShape) -> bin:
       tensor (tf.TensorShape): an input tensor shape to be serialized
 
     Returns:
-      tuple: serialized tuple of TF tensor shape.The first value is
-      the binary for the TensorShape object. The third is the
+      tuple: serialized tuple of TF tensor shape. The first value is
+      the binary for the TensorShape object. The second is the
       chain of abstractions.
     """
 
     tensorshape_list_ser = syft.serde.serde._simplify(
         tensorshape.as_list())
 
+    # TODO[Yann] currently this condition is never true,
+    # tf.TensorShape needs to be hooked
     chain = None
     if hasattr(tensorshape, "child"):
         chain = syft.serde._simplify(tensorshape.child)
@@ -117,6 +119,8 @@ def _detail_tf_tensorshape(worker, tensor_tuple) -> tf.TensorShape:
 
     tensorshape = tf.TensorShape(tensorshape_list)
 
+    # TODO[Yann] currently this condition is never true,
+    # tf.TensorShape needs to be hooked
     if chain is not None:
         chain = syft.serde._detail(worker, chain)
         tensorshape.child = chain
