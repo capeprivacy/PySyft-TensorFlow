@@ -10,8 +10,8 @@ from syft.generic.tensor import initialize_tensor
 
 def _simplify_tf_tensor(tensor: tf.Tensor) -> bin:
     """
-    This function converts a TF tensor into a serialized TF tensor
-    using tf.io. We do this because it's native to TF, and they've optimized it.
+    This function converts a TF tensor into a serialized TF tensor using
+    tf.io. We do this because it's native to TF, and they've optimized it.
 
     Args:
       tensor (torch.Tensor): an input tensor to be serialized
@@ -19,7 +19,7 @@ def _simplify_tf_tensor(tensor: tf.Tensor) -> bin:
     Returns:
       tuple: serialized tuple of TensorFlow tensor. The first value is the
       id of the tensor and the second is the binary for the TensorFlow
-      object. The third is the tensor dtype and the fourth is the chain 
+      object. The third is the tensor dtype and the fourth is the chain
       of abstractions.
     """
 
@@ -80,8 +80,8 @@ def _simplify_tf_tensorshape(tensorshape: tf.TensorShape) -> bin:
       tensor (tf.TensorShape): an input tensor shape to be serialized
 
     Returns:
-      tuple: serialized tuple of TF tensor shape.The first value is 
-      the binary for the TensorShape object. The third is the 
+      tuple: serialized tuple of TF tensor shape.The first value is
+      the binary for the TensorShape object. The third is the
       chain of abstractions.
     """
 
@@ -100,9 +100,9 @@ def _detail_tf_tensorshape(worker, tensor_tuple) -> tf.TensorShape:
     This function converts a serialized TF tensor shape into a local list.
 
     Args:
-        tensor_tuple (bin): serialized obj of TF tensor shape as list. 
-            It's a tuple where the first value is the binary for the 
-            tensorflow shape (as list), and the third value is the 
+        tensor_tuple (bin): serialized obj of TF tensor shape as list.
+            It's a tuple where the first value is the binary for the
+            tensorflow shape (as list), and the third value is the
             chain of tensor abstractions.
 
     Returns:
@@ -112,7 +112,7 @@ def _detail_tf_tensorshape(worker, tensor_tuple) -> tf.TensorShape:
     tensorshape_list_bin, chain = tensor_tuple
 
     tensorshape_list = syft.serde.serde._detail(
-        worker, 
+        worker,
         tensorshape_list_bin)
 
     tensorshape = tf.TensorShape(tensorshape_list)
