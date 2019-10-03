@@ -166,7 +166,8 @@ class TensorFlowHook(FrameworkHook):
         def module_send_(nn_self, *dest, force_send=False, **kwargs):
             """Overloads tf.module instances so that they could be sent to other workers"""
 
-            for p in nn_self.weights:
+            # [TODO] Check if the model has been built, if not build it
+            for p in nn_self.variables:
                 p.send_(*dest, **kwargs)
 
             return nn_self
@@ -176,7 +177,7 @@ class TensorFlowHook(FrameworkHook):
 
         def module_get_(nn_self):
             """overloads tf.module instances with get method so that weights could be sent back to owner"""
-            for p in nn_self.weights:
+            for p in nn_self.variables:
                 p.get_()
 
             return nn_self
