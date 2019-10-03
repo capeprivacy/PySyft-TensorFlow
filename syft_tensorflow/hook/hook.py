@@ -56,6 +56,9 @@ class TensorFlowHook(FrameworkHook):
 
         self._hook_tensorflow_module()
 
+        # Hook keras.module
+        self._hook_keras_module()
+
         syft.local_worker = self.local_worker
         syft.hook = self
 
@@ -152,6 +155,34 @@ class TensorFlowHook(FrameworkHook):
             )
 
         tensor_type.__init__ = new___init__
+
+    def _hook_keras_module(self):
+        """Overloading tf.module with PySyft functionality, the primary module
+           responsible for core ML functionality such as Neural network layers and
+           loss functions.
+           It is important to note that all the operations are actually in-place.
+        """
+
+        def module_send_(nn_self, *dest, force_send=False, **kwargs):
+            """Overloads tf.module instances so that they could be sent to other workers"""
+
+            for p in nn_self.weights:
+                p.send_(*dest, **kwargs)
+
+            return nn_self
+
+        self.tensorflow.Module.send = module_send_
+        self.tensorflow.Module.send_ = module_send_
+
+        def module_get_(nn_self):
+            """overloads tf.module instances with get method so that weights could be sent back to owner"""
+            for p in nn_self.weights:
+                p.get_()
+
+            return nn_self
+
+        self.tensorflow.Module.get_ = module_get_
+        self.tensorflow.Module.get = module_get_
 
     def _hook_properties(hook_self, tensor_type: type):
         """Overloads tensor_type properties.

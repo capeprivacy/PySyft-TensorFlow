@@ -42,7 +42,7 @@ class TensorFlowAttributes(FrameworkAttributes):
         self.tensorflow_modules = {
             "tensorflow": tensorflow,
             "tensorflow.keras.activations": tensorflow.keras.activations,
-            "tensorflow.math": tensorflow.math,
+            #"tensorflow.math": tensorflow.math,
             # "tensorflow.keras": tensorflow.keras,
         }
 
