@@ -152,7 +152,7 @@ class TensorFlowTensor(AbstractTensor):
             self.ptr = weakref.ref(ptr)
 
             if inplace:
-                self.set_()  # TODO[jason]: pretty sure this is torch specific
+                #self.set_()  # TODO[jason]: pretty sure this is torch specific
                 self.child = ptr
                 return self
             else:
@@ -356,3 +356,14 @@ class TensorFlowTensor(AbstractTensor):
                 response = eval(cmd)(args, **kwargs)
 
         return response
+
+    def send_(self, *location, **kwargs):
+        """
+        Calls send() with inplace option, but only with a single location
+        :param location: workers locations
+        :return:
+        """
+        if len(location) > 1:
+            raise NotImplementedError("Inplace send to several workers is currently not supported.")
+
+        return self.send(*location, inplace=True, **kwargs)
