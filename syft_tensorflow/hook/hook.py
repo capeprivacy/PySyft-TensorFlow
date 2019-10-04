@@ -66,10 +66,11 @@ class TensorFlowHook(FrameworkHook):
 
         self.args_hook_for_overloaded_attr = {}
 
-        self._hook_native_tensor(Tensor, TensorFlowTensor)
+        #self._hook_native_tensor(Tensor, TensorFlowTensor)
         self._hook_native_tensor(tf.Variable, TensorFlowVariable)
 
-        self._hook_pointer_tensor_methods(Tensor)
+        #self._hook_pointer_tensor_methods(Tensor)
+        self._hook_pointer_tensor_methods(tf.Variable)
 
         self._hook_tensorflow_module()
 
@@ -302,11 +303,19 @@ class TensorFlowHook(FrameworkHook):
                         getattr(tensor_type, attr)
                     )
                 # Add this method to the TF tensor
-                setattr(tensor_type, attr, getattr(TensorFlowTensor, attr))
+                setattr(tensor_type, attr, getattr(syft_type, attr))
 
     @classmethod
-    def create_wrapper(cls, child_to_wrap):
-        return tf.constant([])
+    def create_wrapper(cls, child_to_wrap, *args, **kwargs):
+        #return tf.constant([])
+        return tf.Variable([])
+        #cc = child_to_wrap.get(deregister_ptr=False)
+        # if isinstance(cc, tf.Tensor):
+        #     return tf.constant([])
+        # if isinstance(cc, tf.Variable):
+        #     return tf.Variable([])
+
+        # raise Exception('unknown child type: ', type(cc))
 
     @classmethod
     def create_shape(cls, shape_dims):
