@@ -12,6 +12,7 @@ from syft.generic.tensor import initialize_tensor
 
 from syft_tensorflow.attributes import TensorFlowAttributes
 from syft_tensorflow.tensor import TensorFlowTensor
+from syft_tensorflow.tensor import TensorFlowVariable
 
 
 class TensorFlowHook(FrameworkHook):
@@ -56,12 +57,18 @@ class TensorFlowHook(FrameworkHook):
         self.to_auto_overload = {
           Tensor: self._which_methods_should_we_auto_overload(
               Tensor
+          ),
+
+          tf.Variable: self._which_methods_should_we_auto_overload(
+              tf.Variable
           )
         }
 
         self.args_hook_for_overloaded_attr = {}
 
         self._hook_native_tensor(Tensor, TensorFlowTensor)
+        self._hook_native_tensor(tf.Variable, TensorFlowVariable)
+
         self._hook_pointer_tensor_methods(Tensor)
 
         self._hook_tensorflow_module()
