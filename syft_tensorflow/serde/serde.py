@@ -134,5 +134,6 @@ MAP_TF_SIMPLIFIERS_AND_DETAILERS = OrderedDict(
         EagerTensor: (_simplify_tf_tensor, _detail_tf_tensor),
         tf.Tensor: (_simplify_tf_tensor, _detail_tf_tensor),
         tf.TensorShape: (_simplify_tf_tensorshape, _detail_tf_tensorshape),
+        tf.Variable: (_simplify_tf_tensor, _detail_tf_tensor),
     }
 )
