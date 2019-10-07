@@ -1,5 +1,7 @@
 import weakref
 
+import tensorflow as tf
+
 import syft
 from syft.generic.tensor import AbstractTensor
 from syft.workers.base import BaseWorker
@@ -210,6 +212,7 @@ class TensorFlowVariable(AbstractTensor):
         ptr_id: (str or int) = None,
         garbage_collect_data: bool = True,
         shape=None,
+        object_type: str = None,
     ) -> PointerTensor:
         """Creates a pointer to the "self" torch.Tensor object.
 
@@ -229,6 +232,9 @@ class TensorFlowVariable(AbstractTensor):
         if shape is None:
             shape = self.shape
 
+        if object_type is None:
+            object_type = tf.Variable
+
         ptr = syft.PointerTensor.create_pointer(
             self,
             location,
@@ -238,6 +244,7 @@ class TensorFlowVariable(AbstractTensor):
             ptr_id,
             garbage_collect_data,
             shape,
+            object_type=object_type,
         )
 
         return ptr

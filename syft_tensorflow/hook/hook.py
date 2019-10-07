@@ -303,15 +303,10 @@ class TensorFlowHook(FrameworkHook):
 
     @classmethod
     def create_wrapper(cls, child_to_wrap, *args, **kwargs):
-        #return tf.constant([])
-        return tf.Variable([])
-        #cc = child_to_wrap.get(deregister_ptr=False)
-        # if isinstance(cc, tf.Tensor):
-        #     return tf.constant([])
-        # if isinstance(cc, tf.Variable):
-        #     return tf.Variable([])
-
-        # raise Exception('unknown child type: ', type(cc))
+        if isinstance(child_to_wrap.object_type, tf.Variable):
+           return tf.Variable([])
+        else:
+           return tf.constant([])
 
     @classmethod
     def create_shape(cls, shape_dims):
