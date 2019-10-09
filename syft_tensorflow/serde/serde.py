@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 import tensorflow as tf
 from tensorflow.python.framework.ops import EagerTensor
+from tensorflow.python.ops.resource_variable_ops import ResourceVariable
 
 import syft
 
@@ -287,6 +288,7 @@ MAP_TF_SIMPLIFIERS_AND_DETAILERS = OrderedDict(
         tf.Tensor: (_simplify_tf_tensor, _detail_tf_tensor),
         tf.TensorShape: (_simplify_tf_tensorshape, _detail_tf_tensorshape),
         tf.Variable: (_simplify_tf_variable, _detail_tf_variable),
-        tf.keras.layers.Layer: (_simplify_tf_keras_layers, _detail_tf_keras_layers)
+        tf.keras.layers.Layer: (_simplify_tf_keras_layers, _detail_tf_keras_layers),
+        ResourceVariable: (_simplify_tf_variable, _detail_tf_variable),
     }
 )
