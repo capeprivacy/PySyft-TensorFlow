@@ -13,6 +13,7 @@ from syft.generic.tensor import initialize_tensor
 from syft_tensorflow.attributes import TensorFlowAttributes
 from syft_tensorflow.tensor import TensorFlowTensor
 from syft_tensorflow.tensor import TensorFlowVariable
+from syft_tensorflow.tensor import TensorFlowModule
 
 
 class TensorFlowHook(FrameworkHook):
@@ -61,16 +62,23 @@ class TensorFlowHook(FrameworkHook):
 
           tf.Variable: self._which_methods_should_we_auto_overload(
               tf.Variable
-          )
+          ),
+
+          tf.Module: self._which_methods_should_we_auto_overload(
+              tf.Module
+          ),
+
         }
 
         self.args_hook_for_overloaded_attr = {}
 
         self._hook_native_tensor(Tensor, TensorFlowTensor)
         self._hook_native_tensor(tf.Variable, TensorFlowVariable)
+        self._hook_native_tensor(tf.Module, TensorFlowModule)
 
         self._hook_pointer_tensor_methods(Tensor)
         self._hook_pointer_tensor_methods(tf.Variable)
+        self._hook_pointer_tensor_methods(tf.Module)
 
         self._hook_tensorflow_module()
 
@@ -227,7 +235,7 @@ class TensorFlowHook(FrameworkHook):
 
         tensor_type.is_wrapper = is_wrapper
 
-        tensor_type.native_shape = tensor_type.shape
+        #tensor_type.native_shape = tensor_type.shape
 
         def dim(self):
             return len(self.shape)
@@ -305,6 +313,8 @@ class TensorFlowHook(FrameworkHook):
     def create_wrapper(cls, child_to_wrap, *args, **kwargs):
         if isinstance(child_to_wrap.object_type, tf.Variable):
            return tf.Variable([])
+        #elif issubclass(child_to_wrap.object_type, tf.Module):
+        #    return tf.Module()
         else:
            return tf.constant([])
 
