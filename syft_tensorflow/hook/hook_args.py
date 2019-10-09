@@ -23,7 +23,7 @@ type_rule = {
     tf.Variable: one,
     TensorFlowTensor: one,
     EagerTensor: one,
-    tf.Module: one,
+    tf.keras.layers.Layer: one,
 }
 
 def default_forward(i):
@@ -36,14 +36,14 @@ forward_func = {
     tf.Tensor: default_forward,
     tf.Variable: default_forward,
     EagerTensor: default_forward,
-    tf.Module: default_forward,
+    tf.keras.layers.Layer: default_forward,
 }
 backward_func = {
     tf.Tensor: lambda i: i.wrap(),
     tf.Variable: lambda i: i.wrap(),
     TensorFlowTensor: lambda i: i.wrap(),
     EagerTensor: lambda i: i.wrap(),
-    tf.Module: lambda i: i.wrap(),
+    tf.keras.layers.Layer: lambda i: i.wrap(),
 }
 ambiguous_methods = {"__getitem__", "__setitem__"}
 
