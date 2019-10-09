@@ -331,8 +331,7 @@ class TensorFlowHook(FrameworkHook):
     def create_wrapper(cls, child_to_wrap, *args, **kwargs):
         if child_to_wrap.object_type==tf.Variable:
            return tf.Variable([])
-        # TODO [Yann] fix this condition
-        elif child_to_wrap.object_type=='tf.keras.layers.Layer':
+        elif child_to_wrap.object_type==tf.keras.layers.Layer:
             return tf.keras.layers.Layer()
         else:
             return tf.constant([])
