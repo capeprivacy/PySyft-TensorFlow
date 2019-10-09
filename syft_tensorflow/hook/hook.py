@@ -316,6 +316,8 @@ class TensorFlowHook(FrameworkHook):
         Args:
             tensor_type: the tensor_type which holds the methods
         """
+
+        # TODO [Yann] currently just hooking call, needs to hook all the method
         # Use a pre-defined list to select the methods to overload
         for attr in self.to_auto_overload[tensor_type]:
             # if we haven't already overloaded this function
@@ -329,6 +331,7 @@ class TensorFlowHook(FrameworkHook):
     def create_wrapper(cls, child_to_wrap, *args, **kwargs):
         if isinstance(child_to_wrap.object_type, tf.Variable):
            return tf.Variable([])
+        # TODO [Yann] fix this condition
         elif child_to_wrap.object_type=='tf.keras.layers.Layer':
             return tf.keras.layers.Layer()
         else:
