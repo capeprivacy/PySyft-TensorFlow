@@ -123,6 +123,8 @@ class TensorFlowHook(FrameworkHook):
         # Overload auto overloaded with Torch methods
         self._add_methods_from_native_tensor(tensor_type, syft_type)
 
+        self._hook_layer_methods(tensor_type)
+
 
     def _hook_tensorflow_module(self):
         tensorflow_modules = syft.tensorflow.tensorflow_modules
@@ -323,6 +325,24 @@ class TensorFlowHook(FrameworkHook):
                     )
                 # Add this method to the TF tensor
                 setattr(tensor_type, attr, getattr(syft_type, attr))
+
+    def _hook_layer_methods(self, tensor_type: type):
+        """
+        Add hooked version of all methods of to_auto_overload[tensor_type]
+        to the tensor_type; instead of performing the native tensor
+        method, the hooked version will be called
+
+        Args:
+            tensor_type: the tensor_type which holds the methods
+        """
+        # Use a pre-defined list to select the methods to overload
+        for attr in self.to_auto_overload[tensor_type]:
+            # if we haven't already overloaded this function
+            if (attr=='call') & (f"native_{attr}" not in dir(tensor_type)):
+                native_method = getattr(tensor_type, attr)
+                setattr(tensor_type, f"native_{attr}", native_method)
+                new_method = self._get_hooked_method(attr)
+                setattr(tensor_type, attr, new_method)
 
     @classmethod
     def create_wrapper(cls, child_to_wrap, *args, **kwargs):
