@@ -328,16 +328,6 @@ class TensorFlowHook(FrameworkHook):
                 setattr(tensor_type, attr, new_method)
 
     @classmethod
-    def create_wrapper(cls, child_to_wrap, *args, **kwargs):
-        if child_to_wrap.object_type==tf.Variable:
-           return tf.Variable([])
-        elif child_to_wrap.object_type==tf.keras.layers.Layer:
-            return tf.keras.layers.Layer()
-        else:
-            return tf.constant([])
-
-
-    @classmethod
     def create_shape(cls, shape_dims):
         return tf.TensorShape(shape_dims)
 

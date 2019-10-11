@@ -162,7 +162,7 @@ class KerasLayer(AbstractTensor):
                 self.child = ptr
                 return self
             else:
-                output = ptr if no_wrap else ptr.wrap()
+                output = ptr if no_wrap else ptr.wrap(type=tf.keras.layers.Layer)
 
         else:
 
@@ -173,7 +173,7 @@ class KerasLayer(AbstractTensor):
             output = syft.MultiPointerTensor(children=children)
 
             if not no_wrap:
-                output = output.wrap()
+                output = output.wrap(type=tf.keras.layers.Layer)
 
         return output
 
@@ -211,8 +211,7 @@ class KerasLayer(AbstractTensor):
         owner: BaseWorker = None,
         ptr_id: (str or int) = None,
         garbage_collect_data: bool = True,
-        shape=None,
-        object_type: str = None,
+        shape=None
     ) -> PointerTensor:
         """Creates a pointer to the "self" torch.Tensor object.
 
@@ -229,9 +228,6 @@ class KerasLayer(AbstractTensor):
             else:
                 ptr_id = syft.ID_PROVIDER.pop()
 
-        if object_type is None:
-            object_type = tf.keras.layers.Layer
-
         ptr = syft.PointerTensor.create_pointer(
             self,
             location,
@@ -241,7 +237,6 @@ class KerasLayer(AbstractTensor):
             ptr_id,
             garbage_collect_data,
             shape,
-            object_type=object_type,
         )
 
         return ptr
